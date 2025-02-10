@@ -87,7 +87,7 @@ def update_course(start, goal, speed, obst_list):
     """
     Compute new course using Dijkstra's algorithm.
     """
-    obstacles = obst_list.obstacles
+    obstacles = obst_list.get_list()
     path = dijkstra(start, goal, obstacles)
     
     if not path:
