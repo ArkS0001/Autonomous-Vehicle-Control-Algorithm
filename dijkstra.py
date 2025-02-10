@@ -1,8 +1,4 @@
-"""
-ndt_map_construction.py
 
-Author: Shisato Yano
-"""
 
 # import path setting
 import numpy as np
