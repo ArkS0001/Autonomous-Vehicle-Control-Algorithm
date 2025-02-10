@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obstacle Map Selection</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        #left{
+            margin-left: 20px;
+            height: 60px;
+            width: 60px;
+        }
+        #right{
+            height: 25px;
+            width: 800px;
+        }
+        .logo-container {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        .logo-container img {
+            max-width: 200px;
+            height: auto;
+        }
+        .content {
+            margin-top: 100px;
+            width: 80%;
+        }
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        .map-option {
+            cursor: pointer;
+            width: 300px;
+            height: 200px;
+            border: 2px solid transparent;
+            transition: transform 0.3s ease-in-out, border 0.3s ease-in-out;
+        }
+        .map-option:hover {
+            border: 2px solid blue;
+            transform: scale(1.1);
+        }
+    </style>
+    <script>
+        function selectMap(mapName) {
+            document.getElementById("selectedMap").value = mapName;
+            document.getElementById("mapForm").submit();
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Logos at the top -->
+    <div class="logo-container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHc09dCaSjCu0x098DETJcO4_NhEcUSeVbXQ&s" alt="Left Logo" id="left">
+        <img src="https://uploads.vw-mms.de/system/production/images/cws/082/584/images/61a1efa3768f3899d5879d633a9f21a8aa92dc78/B2024CW00319_web_1600.png" alt="Center Logo" id="center">
+        <img src="https://www.vwits.in/wp-content/themes/vwits/templates-ui/assets/img/vwits_rgb.png" alt="Right Logo" id="right">
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h1>Autonomous Vehicle Control</h1>
+        <h2>Select an Obstacle Map</h2>
+        <form id="mapForm" action="/run_simulation" method="post">
+            <input type="hidden" id="selectedMap" name="map">
+            <div class="map-grid">
+                {% for map_name in maps %}
+                    <img src="{{ url_for('static', filename=map_name|string+'.png') }}" 
+                         alt="{{ map_name }}"
+                         class="map-option" 
+                         onclick="selectMap('{{ map_name }}')">
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
