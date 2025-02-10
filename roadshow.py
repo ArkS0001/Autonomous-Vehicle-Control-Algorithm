@@ -41,13 +41,13 @@ from pure_pursuit_controller import PurePursuitController
 # flag to show plot figure
 show_plot = True
 
-def update_course(course, obst_list):
+def update_course(x_points, y_points, speed, obst_list):
     """
     Update course dynamically based on obstacle positions.
     """
     new_x, new_y = [], []
     
-    for x, y in zip(course.x, course.y):
+    for x, y in zip(x_points, y_points):
         for obs in obst_list.obstacles:
             obs_x, obs_y = obs.state.x_m, obs.state.y_m
             distance = np.hypot(x - obs_x, y - obs_y)
@@ -56,7 +56,7 @@ def update_course(course, obst_list):
         new_x.append(x)
         new_y.append(y)
 
-    return CubicSplineCourse(new_x, new_y, 20)  # Return new course
+    return new_x, new_y, speed
 
 def main():
     """
@@ -67,11 +67,10 @@ def main():
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
     vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25), show_zoom=False)
 
-    # create initial course
-    course = CubicSplineCourse([0.0, 10.0, 25, 40, 50],
-                               [0.0, 4, -12, 20, -13],
-                               20)
-    vis.add_object(course)
+    # initialize course parameters
+    x_points = [0.0, 10.0, 25, 40, 50]
+    y_points = [0.0, 4, -12, 20, -13]
+    speed = 20
 
     # create obstacle instances
     obst_list = ObstacleList()
@@ -85,7 +84,8 @@ def main():
     vis.add_object(obst_list)
 
     # update course dynamically
-    course = update_course(course, obst_list)
+    x_points, y_points, speed = update_course(x_points, y_points, speed, obst_list)
+    course = CubicSplineCourse(x_points, y_points, speed)
     vis.add_object(course)
 
     # create vehicle instance
